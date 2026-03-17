@@ -14,6 +14,17 @@ A demonstration project using FastAPI, LangGraph, PostgreSQL, Kafka, Docker, and
 - UV (package manager)
 - GitLab CI
 
+## Features
+- REST API with FastAPI for text processing
+- LangGraph workflow for text transformation
+- PostgreSQL integration for data persistence
+- Kafka messaging for event publishing
+- Comprehensive logging throughout the application
+- Unit and integration tests with pytest
+- Docker containerization
+- Kubernetes deployment manifests
+- GitLab CI/CD pipeline
+
 ## Setup
 
 1. Install UV: `pip install uv`
@@ -23,6 +34,18 @@ A demonstration project using FastAPI, LangGraph, PostgreSQL, Kafka, Docker, and
 ## API
 
 - POST /process: Process text with LangGraph, save to DB, send to Kafka
+- GET /: Health check endpoint
+
+## Testing
+
+Run unit and integration tests:
+```
+pytest
+```
+
+## Logging
+
+The application uses Python's logging module with INFO level. Logs are output to console.
 
 ## Kubernetes
 
