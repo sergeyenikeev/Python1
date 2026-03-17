@@ -1,0 +1,25 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "pet-project"
+version = "0.1.0"
+description = "A pet project demonstrating FastAPI, LangGraph, PostgreSQL, Kafka"
+authors = [{name = "Your Name"}]
+requires-python = ">=3.9"
+dependencies = [
+    "fastapi>=0.104.0",
+    "uvicorn[standard]>=0.24.0",
+    "langgraph>=0.0.40",
+    "langchain-core>=0.1.0",
+    "psycopg2-binary>=2.9.0",
+    "kafka-python>=2.0.2",
+    "pydantic>=2.0.0",
+    "sqlalchemy>=2.0.0",
+]
+
+[tool.uv]
+dev-dependencies = [
+    "pytest>=7.0.0",
+]

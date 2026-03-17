@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pet-project-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pet-project
+  template:
+    metadata:
+      labels:
+        app: pet-project
+    spec:
+      containers:
+      - name: app
+        image: your-registry/pet-project:latest
+        ports:
+        - containerPort: 8000
+        env:
+        - name: DATABASE_URL
+          value: "postgresql://user:password@postgres-service:5432/petdb"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pet-project-service
+spec:
+  selector:
+    app: pet-project
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000
+  type: LoadBalancer
