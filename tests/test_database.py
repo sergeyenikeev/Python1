@@ -1,5 +1,5 @@
 """
-Unit tests for database operations.
+Юнит-тесты для операций с базой данных.
 """
 
 import pytest
@@ -8,7 +8,7 @@ from app.database import get_db_connection, save_to_db
 
 @patch('app.database.psycopg2.connect')
 def test_get_db_connection(mock_connect):
-    """Test database connection."""
+    """Тестирование соединения с базой данных."""
     mock_conn = MagicMock()
     mock_connect.return_value = mock_conn
     conn = get_db_connection()
@@ -17,7 +17,7 @@ def test_get_db_connection(mock_connect):
 
 @patch('app.database.get_db_connection')
 def test_save_to_db(mock_get_conn):
-    """Test saving data to database."""
+    """Тестирование сохранения данных в базу данных."""
     mock_conn = MagicMock()
     mock_cur = MagicMock()
     mock_conn.cursor.return_value = mock_cur

@@ -1,7 +1,7 @@
 """
-Kafka Producer Module
+Модуль Kafka Producer
 
-This module handles sending messages to Kafka topics.
+Этот модуль обрабатывает отправку сообщений в топики Kafka.
 """
 
 import logging
@@ -17,16 +17,16 @@ producer = KafkaProducer(
 
 def send_to_kafka(topic: str, message: dict):
     """
-    Send a message to the specified Kafka topic.
+    Отправить сообщение в указанный топик Kafka.
 
     Args:
-        topic (str): The Kafka topic to send the message to.
-        message (dict): The message payload as a dictionary.
+        topic (str): Топик Kafka для отправки сообщения.
+        message (dict): Полезная нагрузка сообщения в виде словаря.
     """
     try:
         producer.send(topic, message)
         producer.flush()
-        logger.info(f"Message sent to Kafka topic '{topic}': {message}")
+        logger.info(f"Сообщение отправлено в топик Kafka '{topic}': {message}")
     except Exception as e:
-        logger.error(f"Failed to send message to Kafka: {str(e)}")
+        logger.error(f"Не удалось отправить сообщение в Kafka: {str(e)}")
         raise

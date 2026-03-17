@@ -1,8 +1,8 @@
-# Pet Project
+# Пет-проект
 
-A demonstration project using FastAPI, LangGraph, PostgreSQL, Kafka, Docker, and Kubernetes.
+Демонстрационный проект с использованием FastAPI, LangGraph, PostgreSQL, Kafka, Docker и Kubernetes.
 
-## Tech Stack
+## Технический стек
 - Python
 - FastAPI
 - LangGraph
@@ -11,42 +11,42 @@ A demonstration project using FastAPI, LangGraph, PostgreSQL, Kafka, Docker, and
 - Kubernetes
 - PostgreSQL
 - Kafka
-- UV (package manager)
+- UV (менеджер пакетов)
 - GitLab CI
 
-## Features
-- REST API with FastAPI for text processing
-- LangGraph workflow for text transformation
-- PostgreSQL integration for data persistence
-- Kafka messaging for event publishing
-- Comprehensive logging throughout the application
-- Unit and integration tests with pytest
-- Docker containerization
-- Kubernetes deployment manifests
-- GitLab CI/CD pipeline
+## Возможности
+- REST API с FastAPI для обработки текста
+- Рабочий процесс LangGraph для преобразования текста
+- Интеграция с PostgreSQL для сохранения данных
+- Мессенджинг Kafka для публикации событий
+- Комплексное логирование в приложении
+- Юнит и интеграционные тесты с pytest
+- Контейнеризация Docker
+- Манифесты развертывания Kubernetes
+- Пайплайн GitLab CI/CD
 
-## Setup
+## Установка
 
-1. Install UV: `pip install uv`
-2. Install dependencies: `uv pip install -r pyproject.toml`
-3. Run with Docker Compose: `docker-compose up --build`
+1. Установите UV: `pip install uv`
+2. Установите зависимости: `uv pip install -r pyproject.toml`
+3. Запустите с Docker Compose: `docker-compose up --build`
 
 ## API
 
-- POST /process: Process text with LangGraph, save to DB, send to Kafka
-- GET /: Health check endpoint
+- POST /process: Обработать текст с LangGraph, сохранить в БД, отправить в Kafka
+- GET /: Проверка работоспособности API
 
-## Testing
+## Тестирование
 
-Run unit and integration tests:
+Запустите юнит и интеграционные тесты:
 ```
 pytest
 ```
 
-## Logging
+## Логирование
 
-The application uses Python's logging module with INFO level. Logs are output to console.
+Приложение использует модуль логирования Python с уровнем INFO. Логи выводятся в консоль.
 
 ## Kubernetes
 
-Apply manifests: `kubectl apply -f k8s/`
+Примените манифесты: `kubectl apply -f k8s/`

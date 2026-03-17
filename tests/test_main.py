@@ -1,5 +1,5 @@
 """
-Integration tests for FastAPI application.
+Интеграционные тесты для приложения FastAPI.
 """
 
 import pytest
@@ -13,7 +13,7 @@ client = TestClient(app)
 @patch('app.main.save_to_db')
 @patch('app.main.send_to_kafka')
 def test_process_text_endpoint(mock_send, mock_save, mock_run):
-    """Test the /process endpoint."""
+    """Тестирование endpoint /process."""
     mock_run.return_value = "PROCESSED TEXT"
 
     response = client.post("/process", json={"text": "hello"})
@@ -26,7 +26,7 @@ def test_process_text_endpoint(mock_send, mock_save, mock_run):
     mock_send.assert_called_once_with("processed_topic", {"input": "hello", "output": "PROCESSED TEXT"})
 
 def test_root_endpoint():
-    """Test the root endpoint."""
+    """Тестирование корневого endpoint."""
     response = client.get("/")
     assert response.status_code == 200
     assert response.json() == {"message": "Pet Project API is running"}

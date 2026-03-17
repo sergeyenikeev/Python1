@@ -1,7 +1,7 @@
 """
-Database Module
+Модуль базы данных
 
-This module handles PostgreSQL database operations for saving processed text data.
+Этот модуль обрабатывает операции с базой данных PostgreSQL для сохранения обработанных текстовых данных.
 """
 
 import logging
@@ -12,10 +12,10 @@ logger = logging.getLogger(__name__)
 
 def get_db_connection():
     """
-    Establish a connection to the PostgreSQL database.
+    Установить соединение с базой данных PostgreSQL.
 
     Returns:
-        psycopg2.connection: The database connection object.
+        psycopg2.connection: Объект соединения с базой данных.
     """
     try:
         conn = psycopg2.connect(
@@ -24,19 +24,19 @@ def get_db_connection():
             user="user",
             password="password"
         )
-        logger.info("Database connection established.")
+        logger.info("Соединение с базой данных установлено.")
         return conn
     except Exception as e:
-        logger.error(f"Failed to connect to database: {str(e)}")
+        logger.error(f"Не удалось подключиться к базе данных: {str(e)}")
         raise
 
 def save_to_db(input_text: str, output_text: str):
     """
-    Save the input and output text to the database.
+    Сохранить входной и выходной текст в базу данных.
 
     Args:
-        input_text (str): The original input text.
-        output_text (str): The processed output text.
+        input_text (str): Исходный входной текст.
+        output_text (str): Обработанный выходной текст.
     """
     conn = None
     try:
@@ -44,9 +44,9 @@ def save_to_db(input_text: str, output_text: str):
         cur = conn.cursor()
         cur.execute("INSERT INTO processed_texts (input_text, output_text) VALUES (%s, %s)", (input_text, output_text))
         conn.commit()
-        logger.info("Data saved to database successfully.")
+        logger.info("Данные успешно сохранены в базу данных.")
     except Exception as e:
-        logger.error(f"Failed to save data to database: {str(e)}")
+        logger.error(f"Не удалось сохранить данные в базу данных: {str(e)}")
         if conn:
             conn.rollback()
         raise
@@ -54,4 +54,4 @@ def save_to_db(input_text: str, output_text: str):
         if conn:
             cur.close()
             conn.close()
-            logger.info("Database connection closed.")
+            logger.info("Соединение с базой данных закрыто.")

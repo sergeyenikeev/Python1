@@ -1,8 +1,9 @@
 """
-Pet Project API - A demonstration of FastAPI with LangGraph, PostgreSQL, and Kafka integration.
+Pet Project API - Демонстрация FastAPI с интеграцией LangGraph, PostgreSQL и Kafka.
 
-This module contains the main FastAPI application with endpoints for processing text
-using LangGraph workflows, saving results to PostgreSQL, and sending messages to Kafka.
+Этот модуль содержит основное приложение FastAPI с endpoints для обработки текста
+с использованием рабочих процессов LangGraph, сохранения результатов в PostgreSQL
+и отправки сообщений в Kafka.
 """
 
 import logging
@@ -12,62 +13,63 @@ from app.langgraph_workflow import run_workflow
 from app.database import save_to_db
 from app.kafka_producer import send_to_kafka
 
-# Configure logging
+# Настройка логирования
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 app = FastAPI(
     title="Pet Project API",
     version="1.0.0",
-    description="A pet project demonstrating FastAPI, LangGraph, PostgreSQL, and Kafka."
+    description="Пет-проект, демонстрирующий FastAPI, LangGraph, PostgreSQL и Kafka."
 )
 
 class InputData(BaseModel):
-    """Input data model for text processing requests."""
+    """Модель входных данных для запросов обработки текста."""
     text: str
 
 @app.post("/process")
 async def process_text(data: InputData):
     """
-    Process input text using LangGraph workflow, save to database, and send to Kafka.
+    Обработать входной текст с использованием рабочего процесса LangGraph,
+    сохранить в базу данных и отправить в Kafka.
 
     Args:
-        data (InputData): The input data containing the text to process.
+        data (InputData): Входные данные, содержащие текст для обработки.
 
     Returns:
-        dict: A dictionary with the processed result.
+        dict: Словарь с обработанным результатом.
 
     Raises:
-        HTTPException: If an error occurs during processing.
+        HTTPException: Если во время обработки возникает ошибка.
     """
-    logger.info(f"Received request to process text: {data.text[:50]}...")
+logger.info(f"Получен запрос на обработку текста: {data.text[:50]}...")
     try:
-        # Run LangGraph workflow
-        logger.info("Running LangGraph workflow...")
+        # Запустить рабочий процесс LangGraph
+        logger.info("Запуск рабочего процесса LangGraph...")
         result = run_workflow(data.text)
-        logger.info(f"Workflow result: {result[:50]}...")
+        logger.info(f"Результат рабочего процесса: {result[:50]}...")
 
-        # Save to PostgreSQL
-        logger.info("Saving to PostgreSQL...")
+        # Сохранить в PostgreSQL
+        logger.info("Сохранение в PostgreSQL...")
         save_to_db(data.text, result)
-
-        # Send to Kafka
-        logger.info("Sending to Kafka...")
+        
+        # Отправить в Kafka
+        logger.info("Отправка в Kafka...")
         send_to_kafka("processed_topic", {"input": data.text, "output": result})
-
-        logger.info("Processing completed successfully.")
+        
+        logger.info("Обработка завершена успешно.")
         return {"result": result}
     except Exception as e:
-        logger.error(f"Error during processing: {str(e)}")
+        logger.error(f"Ошибка во время обработки: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/")
 async def root():
     """
-    Root endpoint to check if the API is running.
+    Корневой endpoint для проверки работы API.
 
     Returns:
-        dict: A welcome message.
+        dict: Приветственное сообщение.
     """
-    logger.info("Root endpoint accessed.")
-    return {"message": "Pet Project API is running"}
+    logger.info("Доступ к корневому endpoint.")
+    return {"message": "Pet Project API работает"}
