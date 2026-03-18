@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "pet-project"
 version = "0.1.0"
-description = "A pet project demonstrating FastAPI, LangGraph, PostgreSQL, Kafka"
+description = "A pet project demonstrating FastAPI, LangGraph, PostgreSQL, Kafka, and Redis"
 authors = [{name = "Your Name"}]
 readme = "README.md"
 requires-python = ">=3.9"
@@ -16,6 +16,7 @@ dependencies = [
     "langchain-core>=0.1.0",
     "psycopg2-binary>=2.9.0",
     "kafka-python>=2.0.2",
+    "redis>=5.0.0",
     "pydantic>=2.0.0",
     "sqlalchemy>=2.0.0",
 ]

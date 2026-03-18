@@ -28,6 +28,16 @@ spec:
             configMapKeyRef:
               name: pet-project-config
               key: KAFKA_BOOTSTRAP_SERVERS
+        - name: REDIS_URL
+          valueFrom:
+            configMapKeyRef:
+              name: pet-project-config
+              key: REDIS_URL
+        - name: REDIS_CACHE_TTL_SECONDS
+          valueFrom:
+            configMapKeyRef:
+              name: pet-project-config
+              key: REDIS_CACHE_TTL_SECONDS
 ---
 apiVersion: v1
 kind: Service

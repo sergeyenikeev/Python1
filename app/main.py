@@ -8,6 +8,7 @@ from pydantic import BaseModel
 from app.database import save_to_db
 from app.kafka_producer import send_to_kafka
 from app.langgraph_workflow import run_workflow
+from app.redis_cache import get_cached_result, set_cached_result
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -17,7 +18,7 @@ PROCESSED_TOPIC = "processed_topic"
 app = FastAPI(
     title="Pet Project API",
     version="1.0.0",
-    description="Demo project with FastAPI, LangGraph, PostgreSQL, and Kafka.",
+    description="Demo project with FastAPI, LangGraph, PostgreSQL, Kafka, and Redis.",
 )
 
 
@@ -32,7 +33,11 @@ async def process_text(data: InputData) -> dict[str, str]:
     """Run the workflow, persist the result, and publish an event."""
     logger.info("Received text processing request: %s", data.text[:50])
     try:
-        result = run_workflow(data.text)
+        result = get_cached_result(data.text)
+        if result is None:
+            result = run_workflow(data.text)
+            set_cached_result(data.text, result)
+
         save_to_db(data.text, result)
         send_to_kafka(PROCESSED_TOPIC, {"input": data.text, "output": result})
     except Exception as exc:

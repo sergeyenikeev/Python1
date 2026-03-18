@@ -6,9 +6,12 @@ services:
     depends_on:
       - postgres
       - kafka
+      - redis
     environment:
       DATABASE_URL: postgresql://user:password@postgres:5432/petdb
       KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      REDIS_URL: redis://redis:6379/0
+      REDIS_CACHE_TTL_SECONDS: 3600
 
   postgres:
     image: postgres:15
@@ -45,5 +48,12 @@ services:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
 
+  redis:
+    image: redis:7-alpine
+    command: redis-server --save 60 1
+    volumes:
+      - redis_data:/data
+
 volumes:
   postgres_data:
+  redis_data:
