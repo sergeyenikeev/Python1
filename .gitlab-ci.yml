@@ -12,9 +12,10 @@ build:
 
 test:
   stage: test
+  image: python:3.11
   script:
-    - echo "Running tests"
-    - python -m pytest
+    - pip install ".[dev]"
+    - pytest
   only:
     - main
 

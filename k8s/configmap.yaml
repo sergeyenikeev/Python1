@@ -3,5 +3,5 @@ kind: ConfigMap
 metadata:
   name: pet-project-config
 data:
-  KAFKA_BROKERS: "kafka-service:9092"
+  KAFKA_BOOTSTRAP_SERVERS: "kafka-service:9092"
   DATABASE_URL: "postgresql://user:password@postgres-service:5432/petdb"

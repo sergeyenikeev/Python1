@@ -1,57 +1,52 @@
-"""
-Модуль базы данных
-
-Этот модуль обрабатывает операции с базой данных PostgreSQL для сохранения обработанных текстовых данных.
-"""
+"""Database helpers for storing processed texts."""
 
 import logging
+import os
+
 import psycopg2
-from psycopg2.extras import RealDictCursor
 
 logger = logging.getLogger(__name__)
 
-def get_db_connection():
-    """
-    Установить соединение с базой данных PostgreSQL.
+DEFAULT_DATABASE_URL = "postgresql://user:password@postgres:5432/petdb"
 
-    Returns:
-        psycopg2.connection: Объект соединения с базой данных.
-    """
+
+def get_database_url() -> str:
+    """Return the configured database DSN."""
+    return os.getenv("DATABASE_URL", DEFAULT_DATABASE_URL)
+
+
+def get_db_connection():
+    """Create a PostgreSQL connection."""
     try:
-        conn = psycopg2.connect(
-            host="postgres",
-            database="petdb",
-            user="user",
-            password="password"
-        )
-        logger.info("Соединение с базой данных установлено.")
+        conn = psycopg2.connect(get_database_url())
+        logger.info("Database connection established.")
         return conn
-    except Exception as e:
-        logger.error(f"Не удалось подключиться к базе данных: {str(e)}")
+    except Exception:
+        logger.exception("Failed to connect to PostgreSQL.")
         raise
 
-def save_to_db(input_text: str, output_text: str):
-    """
-    Сохранить входной и выходной текст в базу данных.
 
-    Args:
-        input_text (str): Исходный входной текст.
-        output_text (str): Обработанный выходной текст.
-    """
+def save_to_db(input_text: str, output_text: str) -> None:
+    """Persist the original and processed text."""
     conn = None
+    cur = None
     try:
         conn = get_db_connection()
         cur = conn.cursor()
-        cur.execute("INSERT INTO processed_texts (input_text, output_text) VALUES (%s, %s)", (input_text, output_text))
+        cur.execute(
+            "INSERT INTO processed_texts (input_text, output_text) VALUES (%s, %s)",
+            (input_text, output_text),
+        )
         conn.commit()
-        logger.info("Данные успешно сохранены в базу данных.")
-    except Exception as e:
-        logger.error(f"Не удалось сохранить данные в базу данных: {str(e)}")
+        logger.info("Processed text saved to the database.")
+    except Exception:
+        logger.exception("Failed to save processed text to the database.")
         if conn:
             conn.rollback()
         raise
     finally:
-        if conn:
+        if cur:
             cur.close()
+        if conn:
             conn.close()
-            logger.info("Соединение с базой данных закрыто.")
+            logger.info("Database connection closed.")

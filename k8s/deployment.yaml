@@ -19,7 +19,15 @@ spec:
         - containerPort: 8000
         env:
         - name: DATABASE_URL
-          value: "postgresql://user:password@postgres-service:5432/petdb"
+          valueFrom:
+            configMapKeyRef:
+              name: pet-project-config
+              key: DATABASE_URL
+        - name: KAFKA_BOOTSTRAP_SERVERS
+          valueFrom:
+            configMapKeyRef:
+              name: pet-project-config
+              key: KAFKA_BOOTSTRAP_SERVERS
 ---
 apiVersion: v1
 kind: Service

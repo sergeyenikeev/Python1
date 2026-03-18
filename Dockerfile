@@ -2,18 +2,14 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# Install UV
-RUN pip install uv
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
-# Copy pyproject.toml and install dependencies
-COPY pyproject.toml .
-RUN uv pip install --system -r pyproject.toml
-
-# Copy app code
+COPY pyproject.toml README.md ./
 COPY app/ ./app/
 
-# Expose port
+RUN pip install --no-cache-dir .
+
 EXPOSE 8000
 
-# Run the app
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

@@ -1,15 +1,14 @@
-version: '3.8'
-
 services:
   app:
     build: .
     ports:
-      - "8000:8000"
+      - "${APP_HOST_PORT:-8001}:8000"
     depends_on:
       - postgres
       - kafka
     environment:
-      - DATABASE_URL=postgresql://user:password@postgres:5432/petdb
+      DATABASE_URL: postgresql://user:password@postgres:5432/petdb
+      KAFKA_BOOTSTRAP_SERVERS: kafka:29092
 
   postgres:
     image: postgres:15
@@ -31,7 +30,9 @@ services:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,PLAINTEXT_INTERNAL://0.0.0.0:29092
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,PLAINTEXT_INTERNAL://kafka:29092
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT_INTERNAL
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
