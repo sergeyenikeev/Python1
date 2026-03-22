@@ -3,7 +3,7 @@
 import hashlib
 import logging
 import os
-from typing import Optional
+from typing import Any, Optional
 
 import redis
 from redis.exceptions import RedisError
@@ -67,3 +67,22 @@ def set_cached_result(text: str, result: str) -> None:
         logger.info("Processed result cached in Redis.")
     except RedisError:
         logger.exception("Failed to write to Redis cache.")
+
+
+def inspect_cache(text: str) -> dict[str, Any]:
+    """Return cached value and TTL for the provided text."""
+    key = build_cache_key(text)
+    try:
+        client = get_redis_client()
+        value = client.get(key)
+        ttl = client.ttl(key)
+    except RedisError:
+        logger.exception("Failed to inspect Redis cache.")
+        return {"error": "Redis unavailable"}
+
+    if ttl in (-2, None):
+        ttl = None
+    if ttl == -1:
+        ttl = None
+
+    return {"key": key, "value": value, "ttl": ttl}

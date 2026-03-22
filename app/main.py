@@ -8,7 +8,7 @@ from pydantic import BaseModel
 from app.database import save_to_db
 from app.kafka_producer import send_to_kafka
 from app.langgraph_workflow import run_workflow
-from app.redis_cache import get_cached_result, set_cached_result
+from app.redis_cache import get_cached_result, inspect_cache, set_cached_result
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -46,6 +46,15 @@ async def process_text(data: InputData) -> dict[str, str]:
 
     logger.info("Text processing request completed successfully.")
     return {"result": result}
+
+
+@app.get("/cache")
+async def cache_inspect(text: str) -> dict[str, object]:
+    """Return cached result metadata for the provided text."""
+    info = inspect_cache(text)
+    if "error" in info:
+        raise HTTPException(status_code=503, detail=info["error"])
+    return info
 
 
 @app.get("/")

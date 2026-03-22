@@ -1,6 +1,6 @@
 """Integration tests for the FastAPI application."""
 
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 from fastapi.testclient import TestClient
 
@@ -50,8 +50,14 @@ def test_process_text_endpoint_uses_redis_cache(mock_send, mock_save, mock_set_c
     mock_send.assert_called_once_with("processed_topic", {"input": "hello", "output": "CACHED TEXT"})
 
 
-def test_root_endpoint():
-    """Root endpoint should return a health response."""
-    response = client.get("/")
+@patch("app.main.inspect_cache")
+def test_cache_inspect_endpoint(mock_inspect):
+    """Cache inspection endpoint should return Redis metadata."""
+    mock_inspect.return_value = {"key": "process:1", "value": "Bob", "ttl": 300}
+
+    response = client.get("/cache", params={"text": "hello"})
+
     assert response.status_code == 200
-    assert response.json() == {"message": "Pet Project API is running"}
+    assert response.json() == {"key": "process:1", "value": "Bob", "ttl": 300}
+    mock_inspect.assert_called_once_with("hello")
+

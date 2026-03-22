@@ -18,6 +18,7 @@ Demo service that processes text with FastAPI and LangGraph, caches results in R
 
 - `GET /` returns a basic health response.
 - `POST /process` checks Redis for a cached result, processes the text on a cache miss, saves the result to PostgreSQL, and sends an event to Kafka.
+- `GET /cache?text=<text>` returns cache metadata for the given payload (key, stored value, TTL).
 
 ## Local run
 
